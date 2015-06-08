@@ -22,6 +22,32 @@ function justacheckplugin_admin(){
 ?>
 <div class="wrap">
 <h4>This plugin, hopefully, will show if someone stole content from your posts</h4>
+<form action="" method="POST" style="margin-top:40px; margin-bottom:40px;">
+	<input type="submit" name="search_draft_posts" value="Search" class="button-primary" />
+	<select name="searchtype" >
+		<?php
+		if(isset($_POST['searchtype'])){
+			$posttoget = $_POST['searchtype'];
+			if ($posttoget == 'post'){
+				?>
+				<option value="post" selected="selected">Posts  </option>
+	   			<option value="page">Pages  </option>
+	   			<?php
+			}else {
+				?>
+				<option value="post">Posts  </option>
+	   			<option value="page" selected="selected">Pages  </option>
+				<?php
+			}}
+		else {
+		?>
+	   <option value="post" selected="selected">Posts  </option>
+	   <option value="page">Pages  </option>
+	   <?php
+		}
+	   ?>
+	</select>
+</form>
 <table class="widefat">
 	<thead>
 		<tr>
@@ -36,16 +62,16 @@ function justacheckplugin_admin(){
 		</tr>
 	</tfoot>
 	<tbody>
-
 	<?php
 		global $wpdb;
-
+		if(isset($_POST['searchtype'])){$posttoget = $_POST['searchtype'];}
+		else $posttoget = 'post';
 		$mypoststoscan = $wpdb->get_results(
 				"
 				SELECT ID, post_title
 				FROM $wpdb->posts
 				WHERE post_status = 'publish'
-				AND post_type='post'
+				AND post_type='".$posttoget."'
 				"
 			);
 	?>
